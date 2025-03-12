@@ -2,7 +2,7 @@
 1) Download the all the files.
 2) Open all '.csv' files via Microsoft Excel:
 
-   i) 'MSTES-CHP/MSTES-CHP.py' to modify the input data: Current Coylton GSP Electricity Demand (MWh), Coylton 33kV Wind (MWh), West Whitlawburn District Heating (kWh), Air Temp (DegC)
+   i) 'MSTES-CHP.py' to modify the input data: Current Coylton GSP Electricity Demand (MWh), Coylton 33kV Wind (MWh), West Whitlawburn District Heating (kWh), Air Temp (DegC)
 
 4) Open all '.py' files in an Integrated Development Environment (IDE) for Python (etc. Spyder, Pycharm, Vscode).
    

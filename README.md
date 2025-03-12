@@ -1,5 +1,5 @@
 # STEaM
-GigaWatt-Hour Subsurface Thermal Energy storAge: Engineered structures and legacy Mine shafts: STEaM
+Subsurface Thermal Energy storage using Mine shaft (STEaM) for district heating and grid balancing
 
 # Objectives
 

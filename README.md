@@ -29,20 +29,22 @@ Two separate scenarios were then investigated:
 Both scenarios were assessed from ‘feasibility’, ‘flexibility’ and ‘financial’ perspectives. Feasibility considered the practicality of MSTES as useful storage including efficiency, temperatures in the shaft and surrounding geology etc. The flexibility provision of the store includes the size of flexible load, the duration of electrical load shift etc. For the HP supplied system % and quantity of electricity imported during wind surplus periods would be indicators of grid support, for the system CHP the % and quantity of electricity exported during periods of wind shortfall. Financial performance of the system is captured in levelised cost of heat (LCOH) with fuel costs based on imports (minus revenue from exports exported for the CHP case), plus capital costs with and without the MSTES integration with the base system, are allocated across the heat supplied to the end consumer.
 
 MSTES-CHP.py is MineShaft Thermal Energy Storage - Combined Heat and Power Python file
-
 MSTES-HP.py is MineShaft Thermal Energy Storage - Heat Pump Python file
 
 # How to use
-
 1) Download the all the files.
-2) Open the XXX.py file in an Integrated Development Environment(IDE) for Python (etc. Spyder, Pycharm, Vscode).
-3) Open 'shaftstore_5a.py' to modify the code for the thermal store.
-4) Open either 'MSTES-CHP.py' or 'MSTES-HP.py' for CHP or HP integration energy system.
-5) Change the directory of the files in the code for the inputs and outputs.
-6) Change the variables and parameters according to your system design.
+2) Open all '.csv' files via Microsoft Excel:
+    i) gsp_data_1.csv' to modify the input data: Current Coylton GSP Electricity Demand (MWh), Future Coylton Electricity Demand (MWh), Coylton 33kV Wind (MWh), Coylton GSP Wind (MWh), Domestic Heat per           kWh, Air Temp (DegC), West Whitlawburn District Heating (kWh).
+    ii) 'geo_win.csv' to modify the ground, concrete, insulation, air water thermal conductivity (W/mK) for each node and layer.
+    iii) 'geo_win2.csv' to modify the ground heat capacity (J/kgK), ground density (kg/m3), ground porosity (fraction) for each node and layer.
+3) Open all '.py' files in an Integrated Development Environment (IDE) for Python (etc. Spyder, Pycharm, Vscode).
+    i) 'shaftstore_1d_0i.py' to modify the code for the thermal store.
+    ii) 'MSTES-HP.py' for HP integration energy system.
+4) Install all python libraries/packages (numpy==1.26.4, pandas==2.2.2, matplotlib==3.9.2).
+5) Change the directory in the 'MSTES-HP.py' for the inputs (lines 46,47,101,103) and outputs (lines 35,1146).
+6) Change the variables and parameters according to your system design. Main inputs are from line 39 to 136. 
 7) Run the code.
-8) If you want to combine all the data in csv., open the 'combine_csv.py' and it will generate a 'combined.csv' file.
-9) Check the results (graphs in png. format and data in csv. format) in the 'results' folder.
+8) Check the results (graphs in png. format and data in csv. format) in the 'results' folder.
 
 # Cite
 Ewe WE, Tuohy P, Flett G. STEaM source code [python], Github. August 20 2024. https://github.com/winengewe/STEaM

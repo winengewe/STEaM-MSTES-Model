@@ -44,7 +44,7 @@ MSTES-HP.py is MineShaft Thermal Energy Storage - Heat Pump Python file
    
 4) Open all '.py' files in an Integrated Development Environment (IDE) for Python (etc. Spyder, Pycharm, Vscode).
    
-    i) 'shaftstore_1d_0i.py' to modify the code for the thermal store.
+    i) 'shaftstore_1d_0i.py' to modify the code for the mineshaft thermal store.
    
     ii) 'MSTES-HP.py' for HP integration energy system.
    

@@ -1,5 +1,5 @@
 # STEaM
-Subsurface Thermal Energy storage using Mine shaft (STEaM) for district heating and grid balancing
+Subsurface Thermal Energy storage via Mine shaft (STEaM) for district heating and grid balancing
 
 # Objectives
 

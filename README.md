@@ -29,6 +29,7 @@ Two separate scenarios were then investigated:
 Both scenarios were assessed from ‘feasibility’, ‘flexibility’ and ‘financial’ perspectives. Feasibility considered the practicality of MSTES as useful storage including efficiency, temperatures in the shaft and surrounding geology etc. The flexibility provision of the store includes the size of flexible load, the duration of electrical load shift etc. For the HP supplied system % and quantity of electricity imported during wind surplus periods would be indicators of grid support, for the system CHP the % and quantity of electricity exported during periods of wind shortfall. Financial performance of the system is captured in levelised cost of heat (LCOH) with fuel costs based on imports (minus revenue from exports exported for the CHP case), plus capital costs with and without the MSTES integration with the base system, are allocated across the heat supplied to the end consumer.
 
 MSTES-CHP.py is MineShaft Thermal Energy Storage - Combined Heat and Power Python file
+
 MSTES-HP.py is MineShaft Thermal Energy Storage - Heat Pump Python file
 
 # How to use

@@ -31,9 +31,9 @@ Both scenarios were assessed from ‘feasibility’, ‘flexibility’ and ‘fi
 MSTES-CHP.py is MineShaft Thermal Energy Storage - Combined Heat and Power Python file
 
 MSTES-HP.py is MineShaft Thermal Energy Storage - Heat Pump Python file
-8) Change the variables and parameters according to your system design. Main inputs are from line 39 to 136. 
-9) Run the code.
-10) Check the results (graphs in png. format and data in csv. format) in the 'results' folder.
+
+# How to use
+Select and download all the files in 'MSTES-CHP' or 'MSTES-HP' folder (Different .py file associate with different input .csv file and shaftstore.py file).
 
 # Cite
 Ewe WE, Tuohy P, Flett G. STEaM source code [python], Github. August 20 2024. https://github.com/winengewe/STEaM

@@ -2,7 +2,7 @@
 1) Download the all the files.
 2) Open all '.csv' files via Microsoft Excel:
    
-    i) gsp_data_1.csv' to modify the input data: Current Coylton GSP Electricity Demand (MWh), Future Coylton Electricity Demand (MWh), Coylton 33kV Wind (MWh), Coylton GSP Wind (MWh), Domestic Heat per           kWh, Air Temp (DegC), West Whitlawburn District Heating (kWh).
+    i) 'gsp_data_1.csv' to modify the input data: Current Coylton GSP Electricity Demand (MWh), Future Coylton Electricity Demand (MWh), Coylton 33kV Wind (MWh), Coylton GSP Wind (MWh), Domestic Heat per           kWh, Air Temp (DegC), West Whitlawburn District Heating (kWh).
    
     ii) 'geo_win.csv' to modify the ground, concrete, insulation, air water thermal conductivity (W/mK) for each node and layer.
    

@@ -21,4 +21,7 @@
 10) Check the results (graphs in png. format and data in csv. format) in the 'results' folder.
 
 # Cite
-Ewe WE, Tuohy P, Flett G. STEaM source code [python], Github. August 20 2024. https://github.com/winengewe/STEaM
+
+APA-style: Ewe, W. E., Flett, G., & Tuohy, P. G. (2025) GitHub - winengewe/STEaM: GigaWatt-Hour Subsurface Thermal Energy storAge: Engineered structures and legacy Mine shafts: STEaM. GitHub. https://github.com/winengewe/STEaM
+
+IEEE-style: W. E. Ewe, G. Flett, P. G. Tuohy, “GitHub - winengewe/STEaM: GigaWatt-Hour Subsurface Thermal Energy storAge: Engineered structures and legacy Mine shafts: STEaM,” GitHub, 2025. https://github.com/winengewe/STEaM

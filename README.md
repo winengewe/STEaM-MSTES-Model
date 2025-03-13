@@ -36,5 +36,7 @@ MSTES-HP.py is MineShaft Thermal Energy Storage - Heat Pump Python file
 Select and download all the files in 'MSTES-CHP' or 'MSTES-HP' folder (Different .py file associate with different input .csv file and shaftstore.py file).
 
 # Cite
+
 APA-style: Ewe, W. E., Flett, G., & Tuohy, P. G. (2025) GitHub - winengewe/STEaM: GigaWatt-Hour Subsurface Thermal Energy storAge: Engineered structures and legacy Mine shafts: STEaM. GitHub. https://github.com/winengewe/STEaM
+
 IEEE-style: W. E. Ewe, G. Flett, P. G. Tuohy, “GitHub - winengewe/STEaM: GigaWatt-Hour Subsurface Thermal Energy storAge: Engineered structures and legacy Mine shafts: STEaM,” GitHub, 2025. https://github.com/winengewe/STEaM

@@ -1,5 +1,4 @@
 """
-en_flows_1d_4i_win.py
 Model intro: EPSRC grant EP/W027763/1 STEaM project
 GigaWatt-Hour Subsurface Thermal Energy storAge: Engineered structures and legacy Mine shafts
 A techno-economic model to investigates the feasibility and potential for MSTES 

@@ -111,8 +111,8 @@ if XTC_col and Geo_col < number_layers:
     stop(f"Invalid XTC {XTC_col} and Geo {Geo_col} Column: . Expected {number_layers}")
 
 #%%% Cost
-surp_tarA = [0.1] # tariff during surplus period (£/kWh)
-grid_tarA = [0.3] # tariff during non-surplus period (£/kWh) [0.1,0.3,0.6,1.2]
+surp_tarA = [0.1] # tariff during wind surplus period (£/kWh)
+grid_tarA = [0.3] # tariff during wind shortfall period (£/kWh) [0.1,0.3,0.6,1.2]
 lifetime = 20 # lifetime of system (years) for LCOH
 HP_CAPEX = 600. # Heat Pump Capital (£/kW)
 BH_CAPEX = 750. # Boreholes (£/kW GSHP, Kensa basis)

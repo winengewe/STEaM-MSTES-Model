@@ -4,7 +4,7 @@ GigaWatt-Hour Subsurface Thermal Energy storAge: Engineered structures and legac
 A techno-economic model to investigates the feasibility and potential for MSTES 
 to deliver low-cost renewable district heating 
 and support balancing of the future renewable electricity grid  
-by Graeme Flett, Win Eng Ewe, Paul Tuohy
+by Win Eng Ewe, Graeme Flett, Paul Tuohy
 Energy System Research Unit (ESRU)
 Department of Mechanical and Aerospace Engineering
 University of Strathclyde, Glasgow G1 1XJ, UK

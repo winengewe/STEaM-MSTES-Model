@@ -128,7 +128,7 @@ disDTA    = [10] # Store Supply/Return DeltaT (C) # fixed value!!!!
 OptionA   = [2] # 1 = Single ASHP, 2 = Single GSHP, 3 = ASHP + GSHP, 4 = ASHP + Sec GSHP
 HeatFracA = [0., 1., 0.5, 0.] # GSHP fraction per system option
 
-#%%% Temperature Limits
+#%%% Temperature Limits (°C)
 initial_node_temp = 12 # Initial node temperature
 heat_tempA         = [50] # Heat demand minimum supply temperature [50]
 min_tempA          = [50] # Minimum store supply temperature (must <= heat_temp & store_temp, = heat_temp for ASHP cases) [50]

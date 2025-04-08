@@ -33,7 +33,7 @@ MSTES-CHP.py is MineShaft Thermal Energy Storage - Combined Heat and Power Pytho
 MSTES-HP.py is MineShaft Thermal Energy Storage - Heat Pump Python file
 
 # How to use
-Select and download all the files in 'MSTES-CHP' or 'MSTES-HP' folder (Different .py file associate with different input .csv file and shaftstore.py file).
+Select and download all the files in 'MSTES-CHP' or 'MSTES-HP' folder (Different .py file associate with different input .csv file and shaftstore.py file). The parameters with sqaure bracket [] in 'Store', 'Ground properties', 'Cost', 'Sensitivity Inputs', 'Temperature Limits' is array type, which means you can add multiple values into [] for combinatorial loops for each run.  
 
 # Cite
 

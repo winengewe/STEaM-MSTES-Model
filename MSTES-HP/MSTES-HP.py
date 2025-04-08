@@ -157,28 +157,28 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
         TS_CAPEX = 7982. * TS_volume**-0.483 # Store Capital Cost (£/m3)
 
     # Data Initialisation
-    eWP2H = np.zeros((nt,1)) # Low Tariff to Heat Pump to Heat Demand
-    eWA2H = np.zeros((nt,1)) # Low Tariff to Aux Heater to Heat Demand
-    eW2S = np.zeros((nt,1)) # Low Tariff to charge Store
-    hS2H = np.zeros((nt,1)) # Store to Heat Demand
-    eGP2H = np.zeros((nt,1)) # High Tariff to Heat Pump to Heat Demand
-    eGA2H = np.zeros((nt,1)) # High Tariff to Aux Heater to Heat Demand
-    eW2G = np.zeros((nt,1)) # Wind Surplus (RES) to Transmission Network - Residual
-    DemH = np.zeros((nt,1)) # Heat Demand
-    hCfW = np.zeros((nt,1)) # Heat to Store
-    hHfW = np.zeros((nt,1)) # Heat from Low Tariff - direct
-    hHfG = np.zeros((nt,1)) # Heat from High Tariff - direct
-    THL = np.zeros((nt,1)) # Store heat losses
-    eWdS = np.zeros((nt,1)) # Available low tariff/wind surplus electricity
-    HPrem = np.zeros((nt,1)) # Residual heat pump capacity at end of timestep
-    Auxrem = np.zeros((nt,1)) # Residual aux capacity at end of timestep
-    HeatOpex = np.zeros((nt,1)) # Operating (electricity) costs
-    Un_H = np.zeros((nt,1)) # Unmet heat demand
+    eWdS      = np.zeros((nt,1)) # Available low tariff/wind surplus electricity
+    DemH      = np.zeros((nt,1)) # Heat Demand
+    eWP2H     = np.zeros((nt,1)) # Low Tariff to Heat Pump to Heat Demand        
+    eWA2H     = np.zeros((nt,1)) # Low Tariff to Aux Heater to Heat Demand  
+    hHfW      = np.zeros((nt,1)) # Heat from Low Tariff - direct
+    Qavail    = np.zeros((nt+1,1)) # Store available charge        
+    hS2H      = np.zeros((nt,1)) # Store to Heat Demand
+    eS2H      = np.zeros((nt,1)) # Electricity for secondary heat pump    
+    eGP2H     = np.zeros((nt,1)) # High Tariff to Heat Pump to Heat Demand
+    eGA2H     = np.zeros((nt,1)) # High Tariff to Aux Heater to Heat Demand
+    hHfG      = np.zeros((nt,1)) # Heat from High Tariff - direct
+    Un_H      = np.zeros((nt,1)) # Unmet heat demand        
+    eW2S      = np.zeros((nt,1)) # Low Tariff to charge Store
+    hCfW      = np.zeros((nt,1)) # Heat to Store
+    eW2G      = np.zeros((nt,1)) # Wind Surplus (RES) to Transmission Network - Residual
+    HPrem     = np.zeros((nt,1)) # Residual heat pump capacity at end of timestep
+    Auxrem    = np.zeros((nt,1)) # Residual aux capacity at end of timestep
     ElecIn_LT = np.zeros((nt,1)) # Total low tariff electricity
     ElecIn_HT = np.zeros((nt,1)) # Total high tariff electricity
-    eS2H = np.zeros((nt,1)) # Electricity for secondary heat pump
-    Qavail = np.zeros((nt+1,1)) # Store available charge
-    OpH = np.zeros((lifetime)) # Yearly operating costs
+    HeatOpex  = np.zeros((nt,1)) # Operating (electricity) costs
+    THL       = np.zeros((nt,1)) # Store heat losses
+    OpH       = np.zeros((lifetime)) # Yearly operating costs
     
     # Nodes Temp Initialisation
     nodes_temp = np.ones(number_layers * number_nodes) * initial_node_temp # Initial node temperatures
@@ -352,8 +352,7 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
     folder_name = f'y{Mod_Year},£{surp_tar}&{grid_tar},{int(h)}m,O{Option},dT{int(disDT)},hT{int(heat_temp)},sT{int(store_temp)},mT{int(min_temp)}'
     location_1 = os.path.join(base_location, folder_name)
     process_folder(base_location, folder_name)
-    
-    
+        
     folder_full = 'full'
     full_location = os.path.join(location_1, folder_full)
     process_folder(location_1, folder_full)

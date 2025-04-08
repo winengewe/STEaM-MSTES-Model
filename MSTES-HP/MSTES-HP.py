@@ -124,7 +124,7 @@ Inf      = 0.02 # Inflation
 HDFacA    = [1e7] # Annual Heat Demand (kWh) for 'HD_Option' = [2]
 MainHPA   = [4300] # Main Heat Pump Capacity (kW) - if secondary HP assumed to be > heat demand
 AuxA      = [100] # Aux Heat Capacity (kW) - linked to MainHPA array position
-disDTA    = [10] # Store Supply/Return DeltaT (C) # fixed value!!!!
+disDTA    = [10] # Store Discharge DeltaT (C) # fixed value!!!!
 OptionA   = [2] # 1 = Single ASHP, 2 = Single GSHP, 3 = ASHP + GSHP, 4 = ASHP + Sec GSHP
 HeatFracA = [0., 1., 0.5, 0.] # GSHP fraction per system option
 

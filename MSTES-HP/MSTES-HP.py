@@ -76,7 +76,7 @@ Temp = np.repeat(Temp,ts,0) # Ambient temperature for ASHP COP
 HD_Option = 1 # [1]=Yearly HD; [2]=Timestep HD
 
 #%%% Store
-RLW_A         = [18,38] # Ground and Water layers height (m) # [0] = NoStore case [28] = match old case 280m
+RLW_A         = [18,38] # Ground and Water layers height (m) # [0,8,18,28,38,48] [0] = NoStore case; [38] = base
 number_nodes  = 11  # nodes for 8 ground rings, shaftwall, insulation and air/minewater
 number_layers = 14  # 4 air layers and 52 water layers (Monktonhall basis) [ori 56]
 top_wat       = 5   # top layer of heated water section (3 dummy air layers not included in the thermal analysis)
@@ -120,7 +120,7 @@ DR       = 0.05 # Discount Rate
 Inf      = 0.02 # Inflation
 
 #%%% Sensitivity Inputs
-HDFacA    = [1e7] # Annual Heat Demand (kWh) for HD_Option = [2]
+HDFacA    = [1e7] # Annual Heat Demand (kWh) for 'HD_Option' = [2]
 MainHPA   = [4300] # Main Heat Pump Capacity (kW) - if secondary HP assumed to be > heat demand
 AuxA      = [100] # Aux Heat Capacity (kW) - linked to MainHPA array position
 disDTA    = [10] # Store Supply/Return DeltaT (C) # fixed value!!!!

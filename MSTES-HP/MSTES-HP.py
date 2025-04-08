@@ -112,8 +112,8 @@ if XTC_col and Geo_col < number_layers:
     stop(f"Invalid XTC {XTC_col} and Geo {Geo_col} Column: . Expected {number_layers}")
 
 #%%% Cost
-surp_tarA = [0.1] # tariff during wind surplus period (£/kWh)
-grid_tarA = [0.3] # tariff during wind shortfall period (£/kWh) [0.1,0.3,0.6,1.2]
+surp_tarA = [0.1] # tariff during wind surplus period (£/kWh e)
+grid_tarA = [0.3] # tariff during wind shortfall period (£/kWh e) [0.1,0.3,0.6,1.2]
 lifetime = 20 # lifetime of system (years) for LCOH
 HP_CAPEX = 600. # Heat Pump Capital (£/kW)
 BH_CAPEX = 750. # Boreholes (£/kW GSHP, Kensa basis)
@@ -211,29 +211,29 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
         elif HD_Option == 2:
             DemH[t,0] = Dat[td,4] * HDFac # Timestep Heat Demand (kWh)
         
-        Res_HP = (MainHP / (3600. / MTS)) # Timestep main heat pump output available (kWh)
-        Res_Aux = (Aux / (3600. / MTS)) # Timestep aux output available (kWh)
-        Res_HD = np.copy(DemH[t,0]) # Timestep heat demand (kWh)
+        Res_HP = (MainHP / (3600. / MTS)) # Timestep main heat pump output available (kWh th)
+        Res_Aux = (Aux / (3600. / MTS)) # Timestep aux output available (kWh th)
+        Res_HD = np.copy(DemH[t,0]) # Timestep heat demand (kWh th)
                 
         #%%% Priority 1: Low Tariff to Heat Pump to Heat Demand
         if Av_WS > 0 and Res_HP > 0 and Res_HD > 0.:
-            eWP2H[t,0] += min(Av_WS, Res_HD / COP1, Res_HP / COP1)
-            hWP2H = eWP2H[t,0] * COP1 # Heat Demand Direct from Low Tariff via heat pump
-            Av_WS -= eWP2H[t,0] # Residual Wind Surplus
-            Res_HD -= hWP2H # Residual Heat Demand
-            Res_HP -= hWP2H # Residual Heat Pump Capacity
-            hHfW[t,0] += hWP2H # # Heat Demand Direct from Low Tariff
-            ElecIn_LT[t,0] += eWP2H[t,0] # Total low tariff electricity input
+            eWP2H[t,0] += min(Av_WS, Res_HD / COP1, Res_HP / COP1) # Elec to heat pump to HD (kWh e)
+            hWP2H = eWP2H[t,0] * COP1 # Heat Demand Direct from Low Tariff via heat pump (kWh th)
+            Av_WS -= eWP2H[t,0] # Residual Wind Surplus (kWh e)
+            Res_HD -= hWP2H # Residual Heat Demand (kWh th)
+            Res_HP -= hWP2H # Residual Heat Pump Capacity (kWh th)
+            hHfW[t,0] += hWP2H # # Heat Demand Direct from Low Tariff (kWh th)
+            ElecIn_LT[t,0] += eWP2H[t,0] # Total low tariff electricity input (kWh e)
 
         #%%% Priority 2: Low Tariff to Aux Heater to Heat Demand 
         if Av_WS > 0. and Aux > 0. and Res_HD > 0.:
-            eWA2H[t,0] += min(Av_WS, Res_HD, Res_Aux)
-            hWA2H = eWA2H[t,0] # Heat Demand Direct from Low Tariff via aux heater
-            Av_WS -= eWA2H[t,0] # Residual Wind Surplus
-            Res_HD -= hWA2H # Residual Heat Demand
-            Res_Aux -= hWA2H # Residual Aux Capacity
-            hHfW[t,0] += hWA2H # # Heat Demand Direct from Low Tariff
-            ElecIn_LT[t,0] += eWA2H[t,0] # Total low tariff electricity input
+            eWA2H[t,0] += min(Av_WS, Res_HD, Res_Aux) # Elec to aux to HD (kWh e)
+            hWA2H = eWA2H[t,0] # Heat Demand Direct from Low Tariff via aux heater (kWh th)
+            Av_WS -= eWA2H[t,0] # Residual Wind Surplus (kWh e)
+            Res_HD -= hWA2H # Residual Heat Demand (kWh th)
+            Res_Aux -= hWA2H # Residual Aux Capacity (kWh th)
+            hHfW[t,0] += hWA2H # # Heat Demand Direct from Low Tariff (kWh th)
+            ElecIn_LT[t,0] += eWA2H[t,0] # Total low tariff electricity input (kWh e)
         
         #%%% Priority 3: Store to Heat Demand
         if h > 0 and Res_HD > 0:
@@ -242,18 +242,18 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
                 if nodes_temp[top_wat*number_nodes-1] > min_temp and nodes_temp[number_layers*number_nodes-1] > (min_temp - 10.): 
                     # Store direct supply to HD
                     if nodes_temp[top_wat*number_nodes-1] > heat_temp: # top Store temp > HD Temp
-                        hS2H[t,0] += np.copy(Res_HD) # Heatout direct from Store to HD
-                        Res_HD -= hS2H[t,0] # Residual Heat Demand
+                        hS2H[t,0] += np.copy(Res_HD) # Heatout direct from Store to HD (kWh th)
+                        Res_HD -= hS2H[t,0] # Residual Heat Demand (kWh th)
                     elif Option == 2 or Option == 4:                                
                         # Low Tariff -> Store + HP -> HD
                         if Av_WS > 0: # available wind surplus    
-                            eS2H[t,0] += min(Av_WS, Res_HP / COP3, Res_HD / COP3)
-                            Av_WS -= eS2H[t,0]
-                            ElecIn_LT[t,0] += eS2H[t,0] # Total low tariff electricity input
+                            eS2H[t,0] += min(Av_WS, Res_HP / COP3, Res_HD / COP3) # Elec to HP to HD (kWh e)
+                            Av_WS -= eS2H[t,0] # Residual Wind Surplus (kWh e)
+                            ElecIn_LT[t,0] += eS2H[t,0] # Total low tariff electricity input (kWh e)
                         # High Tariff -> Store + HP -> HD
                         elif Av_WS <= 0: # no wind surplus
-                            eS2H[t,0] += min(Res_HP / COP3, Res_HD / COP3)
-                            ElecIn_HT[t,0] += eS2H[t,0] # Total high tariff electricity input  
+                            eS2H[t,0] += min(Res_HP / COP3, Res_HD / COP3) # Elec to HP to HD (kWh e)
+                            ElecIn_HT[t,0] += eS2H[t,0] # Total high tariff electricity input (kWh e)  
                         hHPout = eS2H[t,0] * COP3 # HeatOut from HP to HD using Non-Wind Grid in Store (kWh th)
                         Res_HD -= hHPout # Residual HD (kWh th)
                         hS2H[t,0] += hHPout - eS2H[t,0] # Heat Extract from Store to HP using Non-Wind Grid (kWh th)                    
@@ -262,42 +262,42 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
                                     
         #%%% Priority 4: High Tariff to Heat Pump to Heat Demand
         if Res_HP > 0 and Res_HD > 0:
-            eGP2H[t,0] += min(Res_HP / COP1, Res_HD / COP1) # Elec High Tariff via heat pump
-            hGP2H = eGP2H[t,0] * COP1 # Heat Demand Direct from High Tariff via heat pump
-            Res_HD -= hGP2H # Residual Heat Demand
-            Res_HP -= hGP2H # Residual Heat Pump Capacity
-            hHfG[t,0] += hGP2H # # Heat Demand Direct from High Tariff
-            ElecIn_HT[t,0] += eGP2H[t,0] # Total high tariff electricity input
-            Un_H[t,0] += np.copy(Res_HD) # Unmet heat demand
+            eGP2H[t,0] += min(Res_HP / COP1, Res_HD / COP1) # Elec High Tariff via heat pump (kWh e)
+            hGP2H = eGP2H[t,0] * COP1 # Heat Demand Direct from High Tariff via heat pump (kWh th)
+            Res_HD -= hGP2H # Residual Heat Demand (kWh th)
+            Res_HP -= hGP2H # Residual Heat Pump Capacity (kWh th)
+            hHfG[t,0] += hGP2H # # Heat Demand Direct from High Tariff (kWh th)
+            ElecIn_HT[t,0] += eGP2H[t,0] # Total high tariff electricity input (kWh e)
+            Un_H[t,0] += np.copy(Res_HD) # Unmet heat demand (kWh th)
             if Un_H[t,0] > 1e-10:
                 print(t, Un_H[t,0])
             
         #%%% Priority 5: High Tariff to Aux Heater to Heat Demand
         if Res_Aux > 0. and Res_HD > 0.:
-            eGA2H[t,0] += min(Res_HD, Res_Aux) # Elec High Tariff via aux heater
-            hGA2H = eGA2H[t,0] # Heat Demand Direct from Low Tariff via aux heater
-            Res_HD -= hGA2H # Residual Heat Demand
-            Res_Aux -= hGA2H # Residual Aux Capacity
-            hHfG[t,0] += hGA2H # Total high tariff electricity input
-            ElecIn_HT[t,0] += eGA2H[t,0] # Total high tariff electricity input
-            Un_H[t,0] += Res_HD # Unmet heat demand
+            eGA2H[t,0] += min(Res_HD, Res_Aux) # Elec High Tariff via aux heater (kWh e)
+            hGA2H = eGA2H[t,0] # Heat Demand Direct from Low Tariff via aux heater (kWh th)
+            Res_HD -= hGA2H # Residual Heat Demand (kWh th)
+            Res_Aux -= hGA2H # Residual Aux Capacity (kWh th)
+            hHfG[t,0] += hGA2H # Heat Demand Direct from High Tariff (kWh th)
+            ElecIn_HT[t,0] += eGA2H[t,0] # Total high tariff electricity input (kWh e)
+            Un_H[t,0] += Res_HD # Unmet heat demand (kWh th)
 
         #%%% Priority 6: Wind Surplus to Store (Charge)
         if h > 0 and Av_WS > 0. and Res_HP > 0.:
             if nodes_temp[number_layers*number_nodes-1] < store_temp - 2.: # Only charge if bottom of Store is less than a limit (prevents > node volume flow per timestep)
-                    eW2S[t,0] += min(Res_HP / COP2, Av_WS) # Elec charge Store
-                    hCfW[t,0] += eW2S[t,0] * COP2 # Heat charge Store
-                    Av_WS -= eW2S[t,0] # Residual Wind Surplus
-                    Res_HP -= hCfW[t,0]
-                    ElecIn_LT[t,0] += eW2S[t,0]
+                    eW2S[t,0] += min(Res_HP / COP2, Av_WS) # Elec charge Store (kWh e)
+                    hCfW[t,0] += eW2S[t,0] * COP2 # Heat charge Store (kWh th)
+                    Av_WS -= eW2S[t,0] # Residual Wind Surplus (kWh e)
+                    Res_HP -= hCfW[t,0] # Residual Heat Pump Capacity (kWh th)
+                    ElecIn_LT[t,0] += eW2S[t,0] # Total low tariff electricity input (kWh e)
             
         #%%% Other Priorities
-        eW2G[t,0] += np.copy(Av_WS) # Priority 7: Wind Surplus to Transmission Network
+        eW2G[t,0] += np.copy(Av_WS) # Priority 7: Wind Surplus to Transmission Network (kWh e)
         
-        HPrem[t,0] += np.copy(Res_HP) # Residual Heat Pump Capacity
-        Auxrem[t,0] += np.copy(Res_Aux) # Residual Aux Capacity
+        HPrem[t,0] += np.copy(Res_HP) # Residual Heat Pump Capacity (kWh th)
+        Auxrem[t,0] += np.copy(Res_Aux) # Residual Aux Capacity (kWh th)
                 
-        HeatOpex[t,0] = ElecIn_LT[t,0] * surp_tar + ElecIn_HT[t,0] * grid_tar # Heat Opex
+        HeatOpex[t,0] = ElecIn_LT[t,0] * surp_tar + ElecIn_HT[t,0] * grid_tar # Heat Opex (£)
         
         if h > 0:
             if hCfW[t,0] - hS2H[t,0] > 0.: # Charge > Discharge
@@ -310,14 +310,14 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
                 charge = 0.
                 discharge = 0.
                 
-            return_temp = 40.#nodes_temp[top_wat*number_nodes-1] - disDT # Return temperature from Heat Demand loop (top Store temp minus deltaT)
+            return_temp = 40. #nodes_temp[top_wat*number_nodes-1] - disDT # Return temperature from Heat Demand loop (top Store temp minus deltaT)
             # print(discharge, return_temp)
             next_nodes_temp, Hloss, Qp, Cxy, hms = shaftstore_1d_0i.ShaftStore(Rx, number_layers, number_nodes, top_wat, RLA, RLW, XTC, Geo, mu, ithk, icp, iden, cden).new_nodes_temp(nodes_temp, store_temp, return_temp, charge, discharge, disDT, Qp, MTS) # Calculate new store temperatures at end of timestep
             if np.isnan(nodes_temp).any(): # check NaN values generate due to ts too small
                 stop("ts too small. Increase the ts")
             nodes_temp = next_nodes_temp[1]
 
-            THL[t,0] = Hloss # Heat loss from Store to ground
+            THL[t,0] = Hloss # Heat loss from Store to ground (kWh th)
             
             # Available heat from store (estimate based on all layers above min_temp)
             fac = 0
@@ -487,8 +487,8 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
         tRES[0, i] = tRES_arrays[i]
         
     header = ['Modelling years',
-              f'Surplus Tariff ({GBP}/kWh)',
-              f'Non-surplus Tariff ({GBP}/kWh)',
+              f'Surplus Tariff ({GBP}/kWh e)',
+              f'Non-surplus Tariff ({GBP}/kWh e)',
               'Thermal store height (m)',
               'System option',
               f'Store Supply/Return DeltaT {DegC}',
@@ -536,23 +536,23 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
         CAPEX = MainHP * (HP_CAPEX + (HeatFrac * BH_CAPEX)) + TS_volume * TS_CAPEX # Total Capital Expenses (£)    
         HPEX = MainHP * HP_CAPEX
     
-    Maintenance = CAPEX * 0.02 # O&M costs usually 2-5% of CAPEX (£/yr.)
+    Maintenance = CAPEX * 0.02 # O&M costs usually 2-5% of CAPEX (£)
     
     # Initialize arrays for lifetime
     CP, OP, OM, ET = [np.zeros(lifetime) for _ in range(4)]
-    CapI = CAPEX # Capital Costs
+    CapI = CAPEX # Capital Costs (£)
     if lifetime > 20:
         CP[20] = HPEX # replacement heat pumps after year 20
     if lifetime > 40:
         CP[40] = HPEX # replacement heat pumps after year 40
     
     for yr in range(lifetime):
-        CP[yr] = CP[yr] / ((1+DR)**(yr+1)) # Additional capital after operation begins
-        operating_cost = OpH[yr]  # Extract the scalar value from the 2D array
-        OP[yr] = operating_cost / ((1 + DR) ** (yr + 1))  # Discounted operating cost
-        OM[yr] = Maintenance / ((1+DR)**(yr+1)) # Maintenance
-        ET[yr] = np.sum(DemH[HOURS_PER_YEAR * yr : HOURS_PER_YEAR * (yr + 1)]) / ((1 + DR) ** (yr + 1)) # Yearly HD
-    LCOH = (np.sum(CP) + np.sum(OP) + np.sum(OM)) / np.sum(ET) # £/kWh
+        CP[yr] = CP[yr] / ((1+DR)**(yr+1)) # Additional capital after operation begins (£)
+        operating_cost = OpH[yr]  # Extract the scalar value from the 2D array (£)
+        OP[yr] = operating_cost / ((1 + DR) ** (yr + 1))  # Discounted operating cost (£)
+        OM[yr] = Maintenance / ((1+DR)**(yr+1)) # Maintenance (£)
+        ET[yr] = np.sum(DemH[HOURS_PER_YEAR * yr : HOURS_PER_YEAR * (yr + 1)]) / ((1 + DR) ** (yr + 1)) # Yearly HD (kWh th)
+    LCOH = (np.sum(CP) + np.sum(OP) + np.sum(OM)) / np.sum(ET) # £/kWh th
     
     #%%% KPIs - Lifetime basis      
     # List of arrays to be extended
@@ -578,7 +578,7 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
     ((np.sum(hS2H) / np.sum(DemH)) * 100), # Proportion of heat via store (%)
     ((np.sum(ElecIn_LT) / (np.sum(ElecIn_LT) + np.sum(ElecIn_HT))) * 100), # Proportion of electricity from low tariff (%)
     ((np.sum(THL) / np.sum(hCfW)) * 100), # Store heat loss proportion (%)
-    LCOH # LCOH (£/kWh)
+    LCOH # LCOH (£/kWh th)
    ]
     
     KPI = np.zeros((1,len(KPI_arrays)))
@@ -588,8 +588,8 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
         KPI[0, i] = KPI_arrays[i]
         
     header = ['Lifetime years',
-              f'Surplus Tariff ({GBP}/kWh)',
-              f'Non-surplus Tariff ({GBP}/kWh)',
+              f'Surplus Tariff ({GBP}/kWh e)',
+              f'Non-surplus Tariff ({GBP}/kWh e)',
               'Thermal store height (m)',
               'System option',
               f'Store Supply/Return DeltaT {DegC}',
@@ -604,7 +604,7 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
               'Proportion of heat via store (%)',
               'Proportion of electricity from low tariff (%)',
               'Store heat loss proportion (%)',
-              f'LCOH ({GBP}/kWh)'
+              f'LCOH ({GBP}/kWh th)'
               ]
     
     if len(KPI[0,:]) != len(header):

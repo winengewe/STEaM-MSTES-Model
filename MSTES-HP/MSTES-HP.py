@@ -148,7 +148,7 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
     HeatFrac = HeatFracA[int(Option-1)] # Proportion of heat from GSHP
     h = RLA + (number_layers - (top_wat-1)) * RLW   # TS height (m) 
     TS_volume = np.pi * r**2 * h # Thermal store volume (m3)
-    Qmax = (np.pi * r**2 * RLW  * 10. * 4.181 * 1000. * (number_layers - top_wat + 1)) / 3600. # Max store heat charge (fixed delta T)
+    Qmax = (np.pi * r**2 * RLW  * disDT * 4.181 * 1000. * (number_layers - top_wat + 1)) / 3600. # Max store heat charge (fixed delta T)
     if RLW == 0:
         h = 0  # NoStore case
         TS_CAPEX = 0 # Store Capital Cost (£/m3)
@@ -239,7 +239,7 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
         if h > 0 and Res_HD > 0:
             if Qavail[t,0] > 0 * Qmax: # Use store based on store charge (charge limit can be varied, set to > 0 to ignore)
                 # if top Store > min_temp & bottom > min_temp - 10 (prevents return temperature >> bottom temp, prevent mixing, stratification)
-                if nodes_temp[top_wat*number_nodes-1] > min_temp and nodes_temp[number_layers*number_nodes-1] > (min_temp - 10.): 
+                if nodes_temp[top_wat*number_nodes-1] > min_temp and nodes_temp[number_layers*number_nodes-1] > (min_temp - disDT): 
                     # Store direct supply to HD
                     if nodes_temp[top_wat*number_nodes-1] > heat_temp: # top Store temp > HD Temp
                         hS2H[t,0] += np.copy(Res_HD) # Heatout direct from Store to HD (kWh th)
@@ -310,7 +310,7 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
                 charge = 0.
                 discharge = 0.
                 
-            return_temp = 40. #nodes_temp[top_wat*number_nodes-1] - disDT # Return temperature from Heat Demand loop (top Store temp minus deltaT)
+            return_temp = nodes_temp[top_wat*number_nodes-1] - disDT # Return temperature from Heat Demand loop (top Store temp minus deltaT)
             # print(discharge, return_temp)
             next_nodes_temp, Hloss, Qp, Cxy, hms = shaftstore_1d_0i.ShaftStore(Rx, number_layers, number_nodes, top_wat, RLA, RLW, XTC, Geo, mu, ithk, icp, iden, cden).new_nodes_temp(nodes_temp, store_temp, return_temp, charge, discharge, disDT, Qp, MTS) # Calculate new store temperatures at end of timestep
             if np.isnan(nodes_temp).any(): # check NaN values generate due to ts too small
@@ -324,15 +324,14 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
             cutoff = -99
             for lyr in range(top_wat-1,number_layers-1):
                 if nodes_temp[lyr*number_nodes+number_nodes-1] > min_temp and nodes_temp[(lyr+1)*number_nodes+number_nodes-1] > min_temp:
-                    # Qavail[t,0] += np.pi * r**2 * RLW * (nodes_temp[lyr*10+9] - (min_temp - disDT)) * 4.181 * 1000. / 3600. #kWh (fixed return temp)
-                    Qavail[t+1,0] += np.pi * r**2 * RLW * 10. * 4.181 * 1000. / 3600. #kWh (fixed delta T)
+                    Qavail[t+1,0] += np.pi * r**2 * RLW * disDT * 4.181 * 1000. / 3600. #kWh (fixed delta T)
                 elif nodes_temp[lyr*number_nodes+number_nodes-1] > min_temp: # final layer above min_temp
                     fac = (0.5 + ((nodes_temp[lyr*number_nodes+number_nodes-1] - min_temp) / (nodes_temp[lyr*number_nodes+number_nodes-1] - nodes_temp[(lyr+1)*number_nodes+number_nodes-1]))) # proportion of layer and layer below above min_temp assuming linear temperature drop between layer temperatures
-                    Qavail[t+1,0] += fac * np.pi * r**2 * RLW * 10. * 4.181 * 1000. / 3600. #kWh (fixed delta T)
+                    Qavail[t+1,0] += fac * np.pi * r**2 * RLW * disDT * 4.181 * 1000. / 3600. #kWh (fixed delta T)
                     cutoff = lyr - top_wat + 2 # final layer above min_temp
                     
             if nodes_temp[(number_layers-1)*number_nodes+number_nodes-1] > min_temp:
-                Qavail[t+1,0] += np.pi * r**2 * RLW * 10. * 4.181 * 1000. / 3600. #kWh (fixed delta T)
+                Qavail[t+1,0] += np.pi * r**2 * RLW * disDT * 4.181 * 1000. / 3600. #kWh (fixed delta T)
                         
             if np.remainder(t,ts) == 0:
                 f_n_t[tr,:] = nodes_temp # Full Temperature Results      

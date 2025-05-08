@@ -5,7 +5,7 @@ GigaWatt-Hour Subsurface Thermal Energy storAge: Engineered structures and legac
 A techno-economic model to investigates the feasibility and potential for MSTES 
 to deliver low-cost renewable district heating 
 and support balancing of the future renewable electricity grid  
-by Win Eng Ewe, Graeme Flett, Paul Tuohy
+by Ewe Win Eng, Graeme Flett, Paul Tuohy
 Energy System Research Unit (ESRU)
 Department of Mechanical and Aerospace Engineering
 University of Strathclyde, Glasgow G1 1XJ, UK
@@ -94,6 +94,7 @@ Rx = np.array([256.+ithk,128.+ithk,64.+ithk,32.+ithk,16.+ithk,8.+ithk,4.+ithk,2.
 Rx_len = len(Rx)
 if Rx_len != number_nodes+1: # if Rx_len not equal to number of nodes + 1
     stop(f"Invalid Rx_len: {Rx_len}. Expected {number_nodes+1}")
+Qlimit = 0 # charge limit, 0 <= Qlimit < 1, 0=use store if it has charge, 0.5=use store if store has half-fully charge [0,0.5]
 
 #%%% Ground properties
 # XTC = np.loadtxt(f'{data_loc}\\mth_geo_1v2.csv',delimiter=',') 
@@ -237,7 +238,7 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
         
         #%%% Priority 3: Store to Heat Demand
         if h > 0 and Res_HD > 0:
-            if Qavail[t,0] > 0 * Qmax: # Use store based on store charge (charge limit can be varied, set to > 0 to ignore)
+            if Qavail[t,0] > Qlimit * Qmax: # Use store based on store charge
                 # if top Store > min_temp & bottom > min_temp - 10 (prevents return temperature >> bottom temp, prevent mixing, stratification)
                 if nodes_temp[top_wat*number_nodes-1] > min_temp and nodes_temp[number_layers*number_nodes-1] > (min_temp - disDT): 
                     # Store direct supply to HD

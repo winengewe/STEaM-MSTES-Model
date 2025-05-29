@@ -38,8 +38,8 @@ GBP = '£'
 combine_tRESnkpi = 0 # [1] combine all tRES.csv AND kpi.csv files
 
 #%% Inputs
-ts       = 4 # Timesteps per hourly base data
-Mod_Year = 10 # Run years
+ts       = 4 # Timesteps per hourly base data [4]
+Mod_Year = 10 # Run years [10]
 HOURS_PER_YEAR = 8760  # 1 data point/hour * 24 hours/day * 365 days/year
 nt = int(HOURS_PER_YEAR * ts * Mod_Year)
 print(f"nt (Total Time Steps): {nt}") 
@@ -78,7 +78,7 @@ Temp = np.repeat(Temp,ts,0) # Ambient temperature for ASHP COP
 HD_Option = 1 # [1]=Yearly HD; [2]=Timestep HD
 
 #%%% Store
-RLW_A         = [18,38] # Ground and Water layers height (m) # [0,8,18,28,38,48] [0] = NoStore case; [38] = base
+RLW_A         = [38] # Ground and Water layers height (m) # [0,8,18,28,38,48] [0] = NoStore case; [38] = base
 number_nodes  = 11  # nodes for 8 ground rings, shaftwall, insulation and air/minewater
 number_layers = 14  # 4 air layers and 52 water layers (Monktonhall basis) [ori 56]
 top_wat       = 5   # top layer of heated water section (3 dummy air layers not included in the thermal analysis)
@@ -464,7 +464,8 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
                 RES, delimiter=',', header=', '.join(header), encoding='utf-8-sig', fmt='%f', comments='')    
     
     #%%% tRES - Modelled years only (MWh basis)
-    tRES_arrays = [Mod_Year, surp_tar, grid_tar, h, Option, disDT, heat_temp, store_temp, min_temp, GSHP_source_temp,
+    tRES_arrays = [Mod_Year, h, surp_tar, grid_tar, MainHP, Aux, disDT, Option, 
+                   heat_temp, min_temp, store_temp, GSHP_source_temp,
             (np.sum(DemH) / 1000),  # Total heat demand (MWh)
             ((np.sum(eWP2H) + np.sum(eWA2H)) / 1000),  # Total low tariff direct to heat demand
             ((np.sum(eGP2H) + np.sum(eGA2H)) / 1000),  # Total high tariff direct to heat demand
@@ -488,14 +489,16 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
         tRES[0, i] = tRES_arrays[i]
         
     header = ['Modelling years',
+              'Thermal store height (m)',
               f'Surplus Tariff ({GBP}/kWh e)',
               f'Non-surplus Tariff ({GBP}/kWh e)',
-              'Thermal store height (m)',
-              'System option',
+              'HP size (kW)',
+              'Aux size (kW)',
               f'Store Discharge DeltaT {DegC}',
+              'System option',
               f'Heat Demand supply temp {DegC}',
-              f'Heat pump flow temp to fill store {DegC}',
               f'Minimum store supply temp {DegC}',
+              f'Heat pump flow temp to fill store {DegC}',
               f'GSHP source temp {DegC}',
         
               'Total heat demand (MWh)',
@@ -572,7 +575,7 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
     eWdS, DemH, eWP2H, eWA2H, hHfW, eS2H, hS2H, eGP2H, eGA2H, hHfG, Un_H, \
     eW2S, hCfW, ElecIn_LT, ElecIn_HT, eW2G, HPrem, Auxrem, THL, HeatOpex = arrays_to_extend        
 
-    KPI_arrays = [lifetime, surp_tar, grid_tar, h, Option, disDT, heat_temp, store_temp, min_temp, GSHP_source_temp,
+    KPI_arrays = [lifetime, h, surp_tar, grid_tar, MainHP, Aux, disDT, Option, heat_temp, min_temp, store_temp, GSHP_source_temp,
     np.sum(DemH) / (np.sum(ElecIn_LT) + np.sum(ElecIn_HT)), # Overall COP (kWh th/kWh e)
     np.sum(hS2H) / (np.sum(eW2S) + np.sum(eS2H)), # Store COP (kWh th/kWh e)
     (np.sum(hHfW) + np.sum(hHfG)) / (np.sum(eWP2H) + np.sum(eWA2H) + np.sum(eGP2H) + np.sum(eGA2H)),  # Direct Supply COP (kWh th/kWh e)
@@ -589,14 +592,16 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
         KPI[0, i] = KPI_arrays[i]
         
     header = ['Lifetime years',
+              'Thermal store height (m)',
               f'Surplus Tariff ({GBP}/kWh e)',
               f'Non-surplus Tariff ({GBP}/kWh e)',
-              'Thermal store height (m)',
-              'System option',
+              'HP size (kW)',
+              'Aux size (kW)',
               f'Store Discharge DeltaT {DegC}',
+              'System option',
               f'Heat Demand supply temp {DegC}',
-              f'Heat pump flow temp to fill store {DegC}',
               f'Minimum store supply temp {DegC}',
+              f'Heat pump flow temp to fill store {DegC}',
               f'GSHP source temp {DegC}',
 
               'Overall COP (kWh th/kWh e)',

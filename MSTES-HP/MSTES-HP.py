@@ -1,7 +1,7 @@
 """
 MSTES-HP.py
 Model intro: EPSRC grant EP/W027763/1 STEaM project
-GigaWatt-Hour Subsurface Thermal Energy storAge: Engineered structures and legacy Mine shafts
+gigaWatt-hour Subsurface Thermal Energy storAge: engineered structures and legacy Mine shafts
 A techno-economic model to investigates the feasibility and potential for MSTES 
 to deliver low-cost renewable district heating 
 and support balancing of the future renewable electricity grid  
@@ -38,7 +38,7 @@ GBP = '£'
 combine_tRESnkpi = 0 # [1] combine all tRES.csv AND kpi.csv files
 
 #%% Inputs
-ts       = 4 # Timesteps per hourly base data [4]
+ts       = 3 # Timesteps per hourly base data [4]
 Mod_Year = 10 # Run years [10]
 HOURS_PER_YEAR = 8760  # 1 data point/hour * 24 hours/day * 365 days/year
 nt = int(HOURS_PER_YEAR * ts * Mod_Year)
@@ -79,19 +79,35 @@ HD_Option = 1 # [1]=Yearly HD; [2]=Timestep HD
 
 #%%% Store
 RLW_A         = [38] # Ground and Water layers height (m) # [0,8,18,28,38,48] [0] = NoStore case; [38] = base
-number_nodes  = 11  # put 11 nodes for 8 ground rings, shaftwall, insulation and air/minewater; the last nodes is the centre of the storage, first node is the outest ring
-number_layers = 14  # put 56 layers if create 52 water layers, must add 4 air layers (Monktonhall basis); first 4 layers are air layers, from top to bottom
+number_nodes  = 15  # put 15 nodes for 12 ground rings, shaftwall, insulation and air/minewater; the last nodes is the centre of the storage, first node is the outest ring, horizontal view
+number_layers = 14  # put 56 layers if create 52 water layers, must add 4 air layers (Monktonhall basis); first 4 layers are air layers, vertical view from top to bottom
 top_wat       = 5   # !fixed! top layer of heated water section (3 dummy air layers not included in the thermal analysis)
 RLA           = 20. # Consolidated air Layer (m) (modelled as a single 20m zone)
 mu            = 50. # Buoyancy model factor (set lower (20-50) if 'overflow encountered in exp' warnings occur)
 r             = 3.5 # radius of TS (m)
 # ithk = 0.9 # insulation thickness (m)
 ithk = 0.1 # insulation thickness (m)
+print(f"nodes={number_nodes} layer={number_layers}, radius={r}")
 icp  = 880 # insulation heat capacity (J/kgK)
 iden = 1600 # insulation density (kg/m3)
 cden = iden # concrete wall density (kg/m)
-Rx = np.array([256.+ithk,128.+ithk,64.+ithk,32.+ithk,16.+ithk,8.+ithk,4.+ithk,2.+ithk,1.+ithk,
-               ithk+ithk, ithk, -r + ithk]) + (r - ithk) # Node outer radii (m); related to the number_nodes
+Rx = np.array([256.+ithk, # Ground ring 12 
+               128.+ithk, # Ground ring 11
+               64.+ithk, # Ground ring 10
+               48.+ithk, # Ground ring 9
+               32.+ithk, # Ground ring 8
+               24.+ithk, # Ground ring 7
+               20.+ithk, # Ground ring 6
+               16.+ithk, # Ground ring 5
+               12.+ithk, # Ground ring 4
+               8.+ithk, # Ground ring 3
+               4.+ithk, # Ground ring 2
+               2.+ithk, # Ground ring 1
+               1.+ithk, # Mineshaft wall
+               ithk+ithk, # Insulation layer
+               ithk, # Air/Minewater 
+               -r + ithk]) \
+               + (r - ithk) # Node outer radii (m); related to the number_nodes
 Rx_len = len(Rx)
 if Rx_len != number_nodes+1: # if Rx_len not equal to number of nodes + 1
     stop(f"Invalid Rx_len: {Rx_len}. Expected {number_nodes+1}")
@@ -109,9 +125,9 @@ XTC_row = len(XTC[1,:]) # check XTC row
 XTC_col = len(XTC[:,1]) # check XTC column
 Geo_col = len(Geo[:,1]) # check Geo column
 if XTC_row != number_nodes: # if XTC row not equal to number of nodes
-    stop(f"Invalid XTC Row: {XTC_row}. Expected {number_nodes}")
+    stop(f"Invalid XTC Row: {XTC_row}. Expected {number_nodes}. Check geo_win.csv and number_nodes")
 if XTC_col and Geo_col < number_layers:
-    stop(f"Invalid XTC {XTC_col} and Geo {Geo_col} Column: . Expected {number_layers}")
+    stop(f"Invalid XTC {XTC_col} and Geo {Geo_col} Column. Expected {number_layers}. Check geo_win.csv and geo_win2.csv and number_layers")
 
 #%%% Cost
 surp_tarA = [0.1] # tariff during wind surplus period (£/kWh e)
@@ -134,7 +150,7 @@ HeatFracA = [0., 1., 0.5, 0.] # GSHP fraction per system option
 initial_node_temp = 12 # Initial node temperature
 heat_tempA         = [50] # Heat demand minimum supply temperature [50]
 min_tempA          = [50] # Minimum store supply temperature (must <= heat_temp & store_temp, = heat_temp for ASHP cases) [50]
-store_tempA        = [70] # Heat pump flow temperature to fill store (no direct flow from store if < heat_temp) [55]
+store_tempA        = [55] # Heat pump flow temperature to fill store (no direct flow from store if < heat_temp) [55,70]
 GSHP_source_tempA  = [10] # Fixed Ground source heat pump source temperature (for COPg1,COPg2 only) [10]
 
 if min_tempA > heat_tempA or min_tempA > store_tempA:
@@ -149,6 +165,7 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
         RLW_A,surp_tarA,grid_tarA,HDFacA,MainHPA,AuxA,disDTA,OptionA,heat_tempA,min_tempA,store_tempA,GSHP_source_tempA):
     HeatFrac = HeatFracA[int(Option-1)] # Proportion of heat from GSHP
     h = RLA + (number_layers - (top_wat-1)) * RLW   # TS height (m) 
+    print(h)
     TS_volume = np.pi * r**2 * h # Thermal store volume (m3)
     Qmax = (np.pi * r**2 * RLW  * disDT * 4.181 * 1000. * (number_layers - top_wat + 1)) / 3600. # Max store heat charge (fixed delta T)
     if RLW == 0:

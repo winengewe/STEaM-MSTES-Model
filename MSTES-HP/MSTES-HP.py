@@ -79,8 +79,8 @@ HD_Option = 1 # [1]=Yearly HD; [2]=Timestep HD
 
 #%%% Store
 RLW_A         = [38] # Ground and Water layers height (m) # [0,8,18,28,38,48] [0] = NoStore case; [38] = base
-number_nodes  = 11  # nodes for 8 ground rings, shaftwall, insulation and air/minewater
-number_layers = 14  # 4 air layers and 52 water layers (Monktonhall basis) [ori 56]
+number_nodes  = 11  # put 11 nodes for 8 ground rings, shaftwall, insulation and air/minewater; the last nodes is the centre of the storage, first node is the outest ring
+number_layers = 14  # put 56 layers if create 52 water layers, must add 4 air layers (Monktonhall basis); first 4 layers are air layers, from top to bottom
 top_wat       = 5   # top layer of heated water section (3 dummy air layers not included in the thermal analysis)
 RLA           = 20. # Consolidated air Layer (m) (modelled as a single 20m zone)
 mu            = 50. # Buoyancy model factor (set lower (20-50) if 'overflow encountered in exp' warnings occur)
@@ -91,7 +91,7 @@ icp  = 880 # insulation heat capacity (J/kgK)
 iden = 1600 # insulation density (kg/m3)
 cden = iden # concrete wall density (kg/m)
 Rx = np.array([256.+ithk,128.+ithk,64.+ithk,32.+ithk,16.+ithk,8.+ithk,4.+ithk,2.+ithk,1.+ithk,
-               ithk+ithk, ithk, -r + ithk]) + (r - ithk) # Node outer radii (m)
+               ithk+ithk, ithk, -r + ithk]) + (r - ithk) # Node outer radii (m); related to the number_nodes
 Rx_len = len(Rx)
 if Rx_len != number_nodes+1: # if Rx_len not equal to number of nodes + 1
     stop(f"Invalid Rx_len: {Rx_len}. Expected {number_nodes+1}")

@@ -146,7 +146,7 @@ Size_CHPA = [4300] # Main CHP Capacity (kW) - CHP size assumed to be > peak heat
 Size_GBA  = [100] # GB Heat Capacity (kW)
 disDTA    = [10] # Store discharge DeltaT (C) # fixed value!!!!
 OptionA   = [2] # [1] = CHP only (CHP always on to max export income); [2] = CHP + GB (CHP off during wind surplus)
-CHPmodeA  = [1] # [1] = Run to its peak every timestep; [2] = Stop if HD satisfied
+CHPmodeA  = [2] # [1] = Run to its peak every timestep; [2] = Stop if HD satisfied
 eff_GB_thermal = 0.88 # Gas boiler efficiency
 eff_CHP_choice = [1] # select 'eff_CHP' [1,2,3,4] base [1]
 eff_CHP_map = { # CHP output efficiency for elec,heat
@@ -232,7 +232,7 @@ for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disD
         
         #%% CHP only case
         if Option == 1: # CHP on during wind surplus/low tariff
-            Size_GB = 0
+            Size_GB = 0; Res_GB = 0
             
             #%%% Wind shortfall/high tariff
             if Av_WS == 0: # if wind shortfall/high tariff (CHP on)

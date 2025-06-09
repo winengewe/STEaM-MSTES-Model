@@ -501,7 +501,7 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
     
     tRES = np.zeros((1,len(tRES_arrays)))
     
-    # Assign each column in RES
+    # Assign each column in tRES
     for i in range (len(tRES_arrays)):
         tRES[0, i] = tRES_arrays[i]
         
@@ -604,7 +604,7 @@ for RLW,surp_tar,grid_tar,HDFac,MainHP,Aux,disDT,Option,heat_temp,min_temp,store
     
     KPI = np.zeros((1,len(KPI_arrays)))
     
-    # Assign each column in RES
+    # Assign each column in KPI
     for i in range (len(KPI_arrays)):
         KPI[0, i] = KPI_arrays[i]
         

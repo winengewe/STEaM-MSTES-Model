@@ -1,5 +1,5 @@
 """
-MSTES-HP.py
+MSTES-HP.py (Mine Shaft Thermal Energy Storage - Heat Pump)
 Model intro: EPSRC grant EP/W027763/1 STEaM project
 gigaWatt-hour Subsurface Thermal Energy storAge: engineered structures and legacy Mine shafts
 A techno-economic model to investigates the feasibility and potential for MSTES 

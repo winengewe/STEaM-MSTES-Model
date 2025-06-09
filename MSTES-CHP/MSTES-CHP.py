@@ -145,7 +145,7 @@ HDFacA    = [1e7] # Annual Heat Demand (kWh) for HD_Option = [2]
 Size_CHPA = [4300] # Main CHP Capacity (kW) - CHP size assumed to be > peak heat demand (4088.44 WWDH*3 peak HD)
 Size_GBA  = [100] # GB Heat Capacity (kW)
 disDTA    = [10] # Store discharge DeltaT (C) # fixed value!!!!
-OptionA   = [1] # [1] = CHP only (CHP always on to max export income); [2] = CHP + GB (CHP off during wind surplus)
+OptionA   = [2] # [1] = CHP only (CHP always on to max export income); [2] = CHP + GB (CHP off during wind surplus)
 CHPmodeA  = [1] # [1] = Run to its peak every timestep; [2] = Stop if HD satisfied
 eff_GB_thermal = 0.88 # Gas boiler efficiency
 eff_CHP_choice = [1] # select 'eff_CHP' [1,2,3,4] base [1]
@@ -604,12 +604,8 @@ for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disD
     for yr2 in range(Mod_Year,lifetime):
         OpH[yr2] = OpH[Mod_Year-1] # Copy last op cost for unmodelled years
     
-    if Option == 1:
-        CAPEX = Size_CHP * CHP_CAPEX + TS_volume * TS_CAPEX # Total Capital Expenses (£)
-        HPEX = Size_CHP * CHP_CAPEX
-    elif Option == 4:
-        CAPEX = (Size_CHP * 2.) * CHP_CAPEX + TS_volume * TS_CAPEX # Total Capital Expenses (£)
-        HPEX = (Size_CHP * 2.) * CHP_CAPEX
+    CAPEX = Size_CHP * CHP_CAPEX + Size_GB * GB_CAPEX + TS_volume * TS_CAPEX # Total Capital Expenses (£)
+    CHPEX = Size_CHP * CHP_CAPEX
     
     Maintenance = CAPEX * 0.02 # O&M costs usually 2-5% of CAPEX (£/yr.)
     
@@ -617,9 +613,9 @@ for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disD
     CP, OP, OM, ET = [np.zeros(lifetime) for _ in range(4)]
     CapI = CAPEX # Capital Costs
     if lifetime > 20:
-        CP[20] = HPEX # replacement heat pumps after year 20
+        CP[20] = CHPEX # replacement heat pumps after year 20
     if lifetime > 40:
-        CP[40] = HPEX # replacement heat pumps after year 40
+        CP[40] = CHPEX # replacement heat pumps after year 40
     
     for yr in range(lifetime):
         CP[yr] = CP[yr] / ((1+DR)**(yr+1)) # Additional capital after operation begins

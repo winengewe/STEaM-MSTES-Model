@@ -423,7 +423,7 @@ for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disD
     # Set base location and define folder names
     # base_location = "/Users/cmb22235/OneDrive - University of Strathclyde/Desktop/STEaM WP4 team/MSTES-insul/results/"
     base_location = "/Users/cmb22235/OneDrive - University of Strathclyde/Desktop/"
-    folder_name = f'y{Mod_Year},£{surp_tar}&{grid_tar},{int(h)}m,O{Option},dT{int(disDT)},hT{int(heat_temp)},sT{int(store_temp)},mT{int(min_temp)}'
+    folder_name = f'y{Mod_Year},£{surp_tar}&{grid_tar},{int(h)}m,O{Option},M{CHPmode},dT{int(disDT)},hT{int(heat_temp)},sT{int(store_temp)},mT{int(min_temp)}'
     location_1 = os.path.join(base_location, folder_name)
     process_folder(base_location, folder_name)
     

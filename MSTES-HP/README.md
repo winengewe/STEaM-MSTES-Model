@@ -15,8 +15,8 @@
     ii) 'MSTES-HP.py' for HP integration energy system.
    
 6) Install all python libraries/packages (numpy==1.26.4, pandas==2.2.2, matplotlib==3.9.2).
-7) Change the directory in the 'MSTES-HP.py' for the inputs (lines 46,47,101,103) and outputs (lines 35,1146).
-8) Change the variables and parameters according to your system design. Main inputs are from line 39 to 136. 
+7) Change the directory in the 'MSTES-HP.py' for the inputs (lines 47,48,119,121) and outputs (lines 369,1168).
+8) Change the variables and parameters according to your system design. Main inputs are from line 40 to 154. 
 9) Run the code.
 10) Check the results (graphs in png. format and data in csv. format) in the 'results' folder.
 

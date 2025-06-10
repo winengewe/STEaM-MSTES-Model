@@ -687,7 +687,7 @@ for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disD
               'HD Direct Supply COP (kWh th/kWh)',
               'Proportion of heat via store (%)',
               'Proportion of heat via chp (%)',
-              'Proportion of elec via chp (%)',
+              'Proportion of elec via chp fuel (%)',
               'Store heat loss proportion (%)',
               f'LCOH ({GBP}/kWh)'
               ]

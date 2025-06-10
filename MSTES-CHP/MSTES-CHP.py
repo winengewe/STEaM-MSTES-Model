@@ -142,8 +142,8 @@ gb_fuel_costA = chp_fuel_costA # (£/kWh) # assume gas boiler use same fuel with
 
 #%%% Sensitivity Inputs
 HDFacA    = [1e7] # Annual Heat Demand (kWh) for HD_Option = [2]
-Size_CHPA = [4300] # Main CHP Capacity (kW) - CHP size assumed to be > peak heat demand (4088.44 WWDH*3 peak HD)
-Size_GBA  = [100] # GB Heat Capacity (kW)
+Size_CHPA = [4200] # Main CHP Capacity (kW) - CHP size assumed to be > peak heat demand (4088.44 WWDH*3 peak HD)
+Size_GBA  = [3100] # GB Heat Capacity (kW)
 disDTA    = [10] # Store discharge DeltaT (C) # fixed value!!!!
 OptionA   = [2] # [1] = CHP only (CHP always on to max export income); [2] = CHP + GB (CHP off during wind surplus)
 CHPmodeA  = [2] # [1] = Run to its peak every timestep; [2] = Stop if HD satisfied
@@ -587,7 +587,7 @@ for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disD
               'Total chp2HD',
               'Total fuel2heat',
               'Total heat losses from store',
-              'Total heat losses from Store',
+              'Total heat charge to store',
               'Total unmet heat demand'
               ]
     

@@ -145,8 +145,8 @@ HDFacA    = [1e7] # Annual Heat Demand (kWh) for HD_Option = [2]
 Size_CHPA = [4200] # Main CHP Capacity (kW) - CHP size assumed to be > peak heat demand (4088.44 WWDH*3 peak HD)
 Size_GBA  = [3100] # GB Heat Capacity (kW)
 disDTA    = [10] # Store discharge DeltaT (C) # fixed value!!!!
-OptionA   = [2] # [1] = CHP only (CHP always on to max export income); [2] = CHP + GB (CHP off during wind surplus)
-CHPmodeA  = [2] # [1] = Run to its peak every timestep; [2] = Stop if HD satisfied
+OptionA   = [1] # [1] = CHP only (CHP always on to max export income); [2] = CHP + GB (CHP off during wind surplus)
+CHPmodeA  = [1] # [1] = Run to its peak every timestep; [2] = Stop if HD satisfied
 eff_GB_thermal = 0.88 # Gas boiler efficiency
 eff_CHP_choice = [1] # select 'eff_CHP' [1,2,3,4] base [1]
 eff_CHP_map = { # CHP output efficiency for elec,heat
@@ -160,7 +160,6 @@ initial_node_temp = 12 # Initial node temperature
 heat_tempA         = [50] # Heat demand minimum supply temperature [50]
 min_tempA          = [50] # Minimum store supply temperature (must <= heat_temp & store_temp, = heat_temp for ASHP cases) [50]
 store_tempA        = [55] # Heat pump flow temperature to fill store (no direct flow from store if < heat_temp) [55,70]
-GSHP_source_tempA  = [10] # Fixed Ground source heat pump source temperature (for COPg1,COPg2 only) [10]
 
 if min_tempA > heat_tempA or min_tempA > store_tempA:
     stop(f"Invalid min_tempA: {int(min_tempA)}{DegC}. Expected less than heat_tempA {int(heat_tempA)}{DegC} and store_tempA {int(store_tempA)}{DegC}")
@@ -170,8 +169,8 @@ if OptionA == 1 or OptionA == 3 or OptionA == 4:
 
 #%% Looping
 # Flatten the nested loops using itertools.product
-for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disDT,Option,CHPmode,eff_CHP,heat_temp,min_temp,store_temp,GSHP_source_temp in product(
-        RLW_A,surp_tarA,grid_tarA,chp_fuel_costA,gb_fuel_costA,HDFacA,Size_CHPA,Size_GBA,disDTA,OptionA,CHPmodeA,eff_CHP_choice,heat_tempA,min_tempA,store_tempA,GSHP_source_tempA):
+for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disDT,Option,CHPmode,eff_CHP,heat_temp,min_temp,store_temp in product(
+        RLW_A,surp_tarA,grid_tarA,chp_fuel_costA,gb_fuel_costA,HDFacA,Size_CHPA,Size_GBA,disDTA,OptionA,CHPmodeA,eff_CHP_choice,heat_tempA,min_tempA,store_tempA):
     eff_CHP_electrical, eff_CHP_thermal = eff_CHP_map.get(eff_CHP, (None, None)) # read 'eff_CHP_map' string
     h = RLA + (number_layers - (top_wat-1)) * RLW   # TS height (m) 
     TS_volume = np.pi * r **2 * h # Thermal store volume (m3)
@@ -541,7 +540,7 @@ for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disD
     tRES_arrays = [Mod_Year, h, surp_tar, grid_tar, chp_fuel_cost, gb_fuel_cost,
                    Size_CHP, Size_GB, disDT, Option, CHPmode, 
                    eff_GB_thermal, eff_CHP_electrical, eff_CHP_thermal,
-                   heat_temp, min_temp, store_temp, GSHP_source_temp,
+                   heat_temp, min_temp, store_temp,
             (np.sum(DemH) / 1000),  # Total heat demand (MWh)
             (np.sum(chp2g) / 1000),  # Total CHP exports elec2grid
             ((np.sum(chp_fuel_used) + np.sum(gb_fuel_used)) / 1000),  # Total fuel used
@@ -577,7 +576,6 @@ for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disD
               f'Heat Demand supply temp {DegC}',
               f'Minimum store supply temp {DegC}',
               f'Heat pump flow temp to fill store {DegC}',
-              f'GSHP source temp {DegC}',
         
               'Total heat demand (MWh)',
               'Total CHP exports elec2grid',
@@ -645,7 +643,7 @@ for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disD
     KPI_arrays = [lifetime, h, surp_tar, grid_tar, chp_fuel_cost, gb_fuel_cost,
                    Size_CHP, Size_GB, disDT, Option, CHPmode, 
                    eff_GB_thermal, eff_CHP_electrical, eff_CHP_thermal,
-                   heat_temp, min_temp, store_temp, GSHP_source_temp,
+                   heat_temp, min_temp, store_temp,
                    
     (np.sum(DemH)+np.sum(chp2g)) / (np.sum(chp_fuel_used) + np.sum(gb_fuel_used)), # Overall COP (kWh th/kWh)
     np.sum(hS2H) / (np.sum(chp_fuel2S) + np.sum(gb_fuel2S)), # Store Heat COP (kWh th/kWh)
@@ -680,7 +678,6 @@ for RLW,surp_tar,grid_tar,chp_fuel_cost,gb_fuel_cost,HDFac,Size_CHP,Size_GB,disD
               f'Heat Demand supply temp {DegC}',
               f'Minimum store supply temp {DegC}',
               f'Heat pump flow temp to fill store {DegC}',
-              f'GSHP source temp {DegC}',
 
               'Overall COP (kWh/kWh)',
               'Store Heat COP (kWh th/kWh)',

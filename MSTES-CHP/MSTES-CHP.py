@@ -159,7 +159,7 @@ eff_CHP_map = { # CHP output efficiency for elec,heat
 initial_node_temp = 12 # Initial node temperature
 heat_tempA         = [50] # Heat demand minimum supply temperature [50]
 min_tempA          = [50] # Minimum store supply temperature (must <= heat_temp & store_temp, = heat_temp for ASHP cases) [50]
-store_tempA        = [55] # Heat pump flow temperature to fill store (no direct flow from store if < heat_temp) [55,70]
+store_tempA        = [55] # Temperature to fill store (no direct flow from store if < heat_temp) [55,70]
 
 if min_tempA > heat_tempA or min_tempA > store_tempA:
     stop(f"Invalid min_tempA: {int(min_tempA)}{DegC}. Expected less than heat_tempA {int(heat_tempA)}{DegC} and store_tempA {int(store_tempA)}{DegC}")

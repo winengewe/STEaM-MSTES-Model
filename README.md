@@ -1,54 +1,82 @@
-# STEaM
-Subsurface Thermal Energy storage via Mine shaft (STEaM) for district heating and grid balancing
+# STEaM-MSTES-Model: Mine Shaft Thermal Energy Storage Simulation
 
-# Objectives
+**Techno-economic modeling of GigaWatt-hour Subsurface Thermal Energy Storage in engineered structures and legacy mine shafts.**
 
-To investigate the potential for Mine Shaft Thermal Energy Storage (MSTES) to deliver low-cost renewable district heating and support balancing of the future renewable electricity grid. 
+This repository contains Python models developed by the Energy System Research Unit (ESRU) at the University of Strathclyde as part of the EPSRC grant **EP/W027763/1 (STEaM project)**. 
 
-The approach taken has been:
+The model investigates the feasibility and potential for Mine Shaft Thermal Energy Storage (MSTES) to deliver low-cost renewable district heating and support the balancing of future renewable electricity grids.
 
-•	Key knowledge was extracted from the relevant literature.
-•	A case study and scenarios were defined.
-•	Concepts were developed for MSTES integration, and KPIs proposed.
-•	A model of MSTES integration into district heating and renewable grid was developed.
-•	The model and case study were used to deliver insights into potential performance. 
-•	The viability of MSTES in a future renewable grid was discussed. 
+## 📂 Repository Structure
 
-# Description
+The project consists of three main Python files:
 
-shaftstore_1d_0i.py is a new thermal model of the mineshaft was developed to evaluate temperatures of the stored water, mineshaft structure, and surrounding geology. The nodal model comprises multiple connected horizontal nodes representing water, shaft walls, and surrounding geology. The internal thermal model of the shaft is the PyLESA multi-node TES tank model [1] representing an open-loop system where hot water is added to the top layer and cooler water removed from the bottom layer to be heated etc. This model defines a series of differential equations for dT/dt for each layer that are solved using ODE solvers. In the MSTES model the standard tank heat loss parameters are replaced by heat exchanges with the concrete wall of the shaft and the surrounding geology using the same multi-ring concept as the CaRM (Capacity Resistance) model [2]. More detail information could be found on [3].
+### 1. `shaftstore_1d_0i.py` (The Physics Core)
+This is the core class file that models the thermodynamics of the mine shaft. It utilizes a 1D finite volume/difference approach to simulate:
+* **Thermal Nodes:** Calculates heat transfer between water layers, the shaft wall, insulation, and surrounding ground rings.
+* **Stratification:** Models buoyancy and mixing within the water column.
+* **Heat Loss:** Calculates radial and vertical heat diffusion into the surrounding geology.
 
-[1] Lyden A, Flett G, Tuohy PG. PyLESA: A Python modelling tool for planning-level Local, integrated, and smart Energy Systems Analysis. SoftwareX 2021;14:100699. https://doi.org/10.1016/j.softx.2021.100699.
+### 2. `MSTES-HP.py` (Heat Pump Scenario)
+A control and economic wrapper that simulates a **Heat Pump (HP)** integrated system.
+* **Logic:** Prioritizes using wind surplus (low tariff) electricity to charge the store or supply demand.
+* **Simulation:** Runs year-long simulations (hourly or half-hourly) over a defined lifetime (e.g., 20 years).
+* **Outputs:** Calculates Levelized Cost of Heat (LCOH), Coefficient of Performance (COP), and system efficiency.
 
-[2] Katsura T, Higashitani T, Fang Y, Sakata Y, Nagano K, Akai H, et al. A New Simulation Model for Vertical Spiral Ground Heat Exchangers Combining Cylindrical Source Model and Capacity Resistance Model. Energies 2020;13:1339. https://doi.org/10.3390/en13061339.
+### 3. `MSTES-CHP.py` (Combined Heat & Power Scenario)
+A control and economic wrapper that simulates a **Combined Heat and Power (CHP)** integrated system.
+* **Logic:** Models CHP operation modes (power-led vs. heat-led) and integrates Gas Boilers (GB) for peak loads.
+* **Economics:** Accounts for fuel costs, electricity export income, and grid tariffs.
 
-[3] https://pure.strath.ac.uk/ws/portalfiles/portal/281784750/Ewe-etal-uSIM-2024-Modelling-of-mine-shaft-thermal-energy-storage.pdf
+## ⚙️ Features
 
-Two separate scenarios were then investigated:
-1.	Integration of MSTES into a HP supplied district heating system where the grid support would be running preferentially during wind surplus periods to consume wind that would be curtailed and avoiding running in periods of wind shortfall.
-2.	Integration of MSTES into a CHP supplied district heating system where the grid support would be through running the CHP preferentially during periods of wind shortfall and avoiding exports in periods of wind surplus to reduce wind curtailment.
+* **Grid Integration:** Models interaction with grid constraints, specifically targeting wind surplus utilization.
+* **Sensitivity Analysis:** Capable of looping through various parameters (Store Height, Tariffs, HP/CHP sizing, Insulation thickness).
+* **Ground Heating Envelope:** Tracks the long-term temperature evolution of the ground surrounding the shaft.
+* **Automated Reporting:** Generates detailed CSV logs (Key Performance Indicators, Time-series results) and visual plots (Temperature profiles, Energy balance graphs).
 
-Both scenarios were assessed from ‘feasibility’, ‘flexibility’ and ‘financial’ perspectives. Feasibility considered the practicality of MSTES as useful storage including efficiency, temperatures in the shaft and surrounding geology etc. The flexibility provision of the store includes the size of flexible load, the duration of electrical load shift etc. For the HP supplied system % and quantity of electricity imported during wind surplus periods would be indicators of grid support, for the system CHP the % and quantity of electricity exported during periods of wind shortfall. Financial performance of the system is captured in levelised cost of heat (LCOH) with fuel costs based on imports (minus revenue from exports exported for the CHP case), plus capital costs with and without the MSTES integration with the base system, are allocated across the heat supplied to the end consumer.
+## 🚀 Getting Started
 
-MSTES-CHP.py is MineShaft Thermal Energy Storage - Combined Heat and Power Python file
+### Prerequisites
+The code requires Python 3.x and the following libraries:
+* `numpy`
+* `pandas`
+* `matplotlib`
+* `scipy`
+* `tqdm` (for progress bars)
+* `IPython`
 
-MSTES-HP.py is MineShaft Thermal Energy Storage - Heat Pump Python file
+### Installation
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/winengewe/STEaM-MSTES-Model.git](https://github.com/winengewe/STEaM-MSTES-Model.git)
+   ```
+2.  **Install dependencies:**
+    ```bash
+    pip install numpy pandas matplotlib scipy tqdm ipython
+    ```
+### Configuration & Input Data
+Note: The scripts currently point to local file paths (e.g., C:\Users\...). You must update the data_loc variable in MSTES-HP.py and MSTES-CHP.py to point to your local data directory.
+The models expect the following CSV input files in your data directory:
+gsp_data_1.csv: Electricity demand, Wind generation, and Heat demand profiles.
+geo_win.csv: Thermal conductivity data for ground, concrete, and insulation.
+geo_win2.csv: Heat capacity, density, and porosity data for the ground.
 
-# How to use
-Select and download all the files in 'MSTES-CHP' or 'MSTES-HP' folder (Different .py file associate with different input .csv file and shaftstore.py file). The parameters with square bracket [ ] in 'Store', 'Ground properties', 'Cost', 'Sensitivity Inputs', 'Temperature Limits' is array type, which means you can add multiple values into [ ] for combinatorial loops for each run.  
+### Running the Model
+Run the desired scenario script directly:
+   ```bash
+   python MSTES-HP.py
+    # OR
+    python MSTES-CHP.py
+   ```
+### Outputs
+The simulation automatically creates results folders based on the simulation parameters. Outputs include:
+* **kpi.csv:** Lifetime system performance metrics (LCOH, COP, Heat Loss %).
+* **RES.csv / tRES.csv:** Time-series energy balance data.
+* **f_n_t.csv:** Full nodal temperature history.
+* **Plots:** PNG images showing node temperatures, seasonal performance (Summer/Winter), and ground heating envelopes.
 
-# Cite
-
-APA-style: Ewe, W. E., Flett, G., & Tuohy, P. G. (2025) GitHub - winengewe/STEaM: GigaWatt-Hour Subsurface Thermal Energy storAge: Engineered structures and legacy Mine shafts: STEaM. GitHub. https://github.com/winengewe/STEaM
-
-IEEE-style: W. E. Ewe, G. Flett, P. G. Tuohy, “GitHub - winengewe/STEaM: GigaWatt-Hour Subsurface Thermal Energy storAge: Engineered structures and legacy Mine shafts: STEaM,” GitHub, 2025. https://github.com/winengewe/STEaM
-
-# Contacts
-
-Ewe Win Eng 
-
-engwinewe@gmail.com
-
-https://www.linkedin.com/in/win-eng-ewe-b942571a6/
-
-https://scholar.google.co.uk/citations?user=O1De6b8AAAAJ&hl=en
+## Authors & Acknowledgments
+* **Authors:** Ewe Win Eng, Graeme Flett, Paul Tuohy
+* **Affiliation:** Energy System Research Unit (ESRU), Dept. of Mechanical and Aerospace Engineering, University of Strathclyde, Glasgow, UK.
+* **Funding:** Engineering and Physical Sciences Research Council (EPSRC) grant EP/W027763/1.
+   
